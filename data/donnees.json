@@ -1,1 +1,50 @@
-[]
+[
+  {
+    "id": "rose",
+    "nom": "Rose",
+    "anecdote": "On cultive la rose depuis des milliers d'années ; les Romains en couvraient le sol de leurs banquets.",
+    "a_verifier": []
+  },
+  {
+    "id": "tulipe",
+    "nom": "Tulipe",
+    "anecdote": "Au XVIIe siècle, aux Pays-Bas, un seul bulbe de tulipe pouvait coûter plus cher qu'une maison.",
+    "a_verifier": []
+  },
+  {
+    "id": "tournesol",
+    "nom": "Tournesol",
+    "anecdote": "Jeune, le tournesol suit la course du soleil ; une fois en fleur, il reste tourné vers l'est.",
+    "a_verifier": []
+  },
+  {
+    "id": "lavande",
+    "nom": "Lavande",
+    "anecdote": "Son nom viendrait du latin lavare, « laver », car les Romains en parfumaient leurs bains.",
+    "a_verifier": []
+  },
+  {
+    "id": "pivoine",
+    "nom": "Pivoine",
+    "anecdote": "En Chine, la pivoine est surnommée la reine des fleurs.",
+    "a_verifier": []
+  },
+  {
+    "id": "marguerite",
+    "nom": "Marguerite",
+    "anecdote": "Le jeu « il m'aime, un peu, beaucoup » se joue en effeuillant une marguerite.",
+    "a_verifier": []
+  },
+  {
+    "id": "coquelicot",
+    "nom": "Coquelicot",
+    "anecdote": "Une graine de coquelicot peut attendre des dizaines d'années dans le sol avant de germer.",
+    "a_verifier": []
+  },
+  {
+    "id": "iris",
+    "nom": "Iris",
+    "anecdote": "Il doit son nom à la déesse grecque de l'arc-en-ciel, à cause de la variété de ses couleurs.",
+    "a_verifier": []
+  }
+]
