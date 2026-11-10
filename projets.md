@@ -1,10 +1,5 @@
-# Journal de bord - Projet Jeu de Mémoire
-
-## Test d'efficacité du fichier AGENTS.md (Étape 4)
-* **Question posée à l'IA :** "Écris-moi une fonction pour mélanger les cartes et gère l'accessibilité."
-
-### 1. Résultat SANS le fichier AGENTS.md :
-/**
+Question sans agents.md: Écris-moi une fonction pour mélanger les cartes et gère l'accessibilité.
+REponse: /**
 * Mélange un tableau de manière aléatoire (Algorithme de Fisher-Yates)
 * @param {Array} array - Le tableau à mélanger
 * @returns {Array} Le tableau mélangé
@@ -75,6 +70,35 @@ return;
 
     // Ici, vous appellerez ensuite votre logique de vérification de paire...
 }
+Avec agants.md: // Mélange les cartes de manière aléatoire et crée les éléments interactifs accessibles
+function initialiserEtMelangerCartes(donneesFleurs) {
+// Duplique les fleurs pour faire 8 paires (16 cartes) et les mélange
+const pairesFleurs = [...donneesFleurs, ...donneesFleurs];
+for (let i = pairesFleurs.length - 1; i > 0; i--) {
+const j = Math.floor(Math.random() * (i + 1));
+[pairesFleurs[i], pairesFleurs[j]] = [pairesFleurs[j], pairesFleurs[i]];
+}
 
+    const grille = document.getElementById('grid');
+    grille.innerHTML = '';
 
+    pairesFleurs.forEach((fleur, index) => {
+        // Utilisation d'un bouton pour garantir la navigation native au clavier
+        const carte = document.createElement('button');
+        carte.type = 'button';
+        carte.className = 'aspect-square bg-rose-900 rounded-lg flex items-center justify-center p-2 cursor-pointer focus:outline-none focus:ring-4 focus:ring-emerald-500 shadow-md transition-all';
+        carte.setAttribute('aria-label', `Carte cachée numéro ${index + 1}`);
+        carte.setAttribute('aria-pressed', 'false');
+        carte.dataset.id = fleur.id;
+        carte.dataset.nom = fleur.nom;
 
+        // Image de la fleur (cachée par défaut)
+        const img = document.createElement('img');
+        img.src = `img/fleurs/${fleur.id}.svg`;
+        img.alt = fleur.nom;
+        img.className = 'w-4/5 h-4/5 object-contain hidden pointer-events-none';
+
+        carte.appendChild(img);
+        grille.appendChild(carte);
+    });
+}
