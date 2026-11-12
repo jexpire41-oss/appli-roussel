@@ -3,30 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jeu de Mémoire - Fleurs</title>
-  <!-- Inclusion de Tailwind CSS via CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Memory Fleurs Roussel</title>
+  <!-- Feuille de style Tailwind compilée depuis src/input.css -->
+  <link rel="stylesheet" href="dist/output.css">
 </head>
-<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
+<body class="bg-roussel-vert-clair text-roussel-texte min-h-screen flex items-center justify-center p-4">
 
-<!-- Container principal (Mobile First : max-w-[375px]) -->
-<main class="w-full max-w-[375px] bg-white rounded-xl shadow-lg p-5 text-center">
+<!-- Conteneur principal (Mobile First : max-w-[375px]) -->
+<main class="w-full max-w-[375px] bg-white rounded-xl shadow-lg p-5 text-center border border-roussel-vert/15">
 
   <header class="mb-4">
-    <h1 class="text-2xl font-bold text-slate-800">Memory Fleurs</h1>
-    <p class="text-slate-600 font-medium mt-1">
-      Coups : <span id="score" class="text-emerald-600 font-bold">0</span>
+    <h1 class="text-2xl font-bold text-roussel-vert">Memory Fleurs Roussel</h1>
+    <p class="text-roussel-gris font-medium mt-1">
+      Coups : <span id="score" class="text-roussel-rose font-bold">0</span>
     </p>
   </header>
 
   <!-- Grille de 16 cartes (4x4) -->
   <div id="grid" class="grid grid-cols-4 gap-2 mb-4"></div>
 
-  <!-- Encadré pour l'anecdote -->
-  <div id="anecdote-box" class="hidden text-left p-3 bg-emerald-50 border-l-4 border-emerald-500 rounded text-sm text-slate-700 mb-4 transition-all"></div>
+  <!-- Encadré pour l'anecdote botanique -->
+  <div id="anecdote-box" class="hidden text-left p-3 bg-roussel-vert-clair border-l-4 border-roussel-vert rounded text-sm text-roussel-texte mb-4 transition-all"></div>
 
   <!-- Bouton Rejouer -->
-  <button id="restart-btn" class="hidden w-full py-2 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg shadow transition duration-200">
+  <button id="restart-btn" type="button" class="hidden w-full py-2 px-4 bg-roussel-rose hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-roussel-rose text-white font-semibold rounded-lg shadow transition duration-200 cursor-pointer">
     Rejouer
   </button>
 
