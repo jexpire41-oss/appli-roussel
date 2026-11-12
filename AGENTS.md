@@ -11,8 +11,8 @@ Application « jeu de mémoire » pour la boutique Fleurs Roussel : seize cartes
 - Si une information manque ou si la demande est ambiguë, poser la question au lieu de deviner.
 
 ## Outils
-- Assistant : (à compléter, sans mode Agent)
-- Éditeur : (à compléter : PhpStorm ou VS Code)
+- Assistant : ChatGPT / Gemini (sans mode Agent)
+- Éditeur : PhpStorm
 - Installation : `npm install`
 - Lancement : `npm run dev` (régénère `dist/output.css`) et `npm run serve` (http://localhost:8080), dans deux terminaux
 
@@ -32,7 +32,7 @@ Application « jeu de mémoire » pour la boutique Fleurs Roussel : seize cartes
 - Le contenu (noms, anecdotes) est lu depuis `data/donnees.json`, jamais écrit en dur dans le code.
 - Le jeu s'utilise à 375 px de large et entièrement au clavier, avec un focus visible.
 - Ne jamais afficher une donnée de la boutique avec `innerHTML` : utiliser `textContent`.
-- Noms de variables et de fonctions en (français ou anglais : un seul choix pour toute l'équipe).
+- Noms de variables et de fonctions en français (un seul choix pour toute l'équipe).
 - Chaque fonction a un commentaire d'une ligne qui dit ce qu'elle fait.
 - Code simple et lisible, sans astuce que l'équipe ne saurait pas expliquer.
 
