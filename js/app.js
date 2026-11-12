@@ -69,7 +69,8 @@ function initialiserJeu() {
 
         boutonCarte.className =
             'aspect-square w-full rounded-lg bg-roussel-vert hover:opacity-90 ' +
-            'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-roussel-rose ' +
+            'focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-roussel-rose ' +
+            'focus:ring-4 focus:ring-offset-2 focus:ring-roussel-rose ' +
             'text-white font-bold text-sm flex flex-col items-center justify-center ' +
             'p-1.5 shadow transition duration-200 cursor-pointer select-none';
 
@@ -80,6 +81,8 @@ function initialiserJeu() {
         const illustration = document.createElement('img');
         illustration.src = `img/fleurs/${fleur.id}.svg`;
         illustration.alt = '';
+        illustration.width = 36;
+        illustration.height = 36;
         illustration.className = 'hidden w-9 h-9 object-contain pointer-events-none';
 
         const etiquette = document.createElement('span');
