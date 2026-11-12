@@ -2,20 +2,18 @@
 // Les données viennent de data/donnees.json, produites par le prompt de contenu.
 // Règles de code : voir AGENTS.md et les conventions d'intégration de l'agence.
 
-// Éléments du DOM
 const gridEl = document.getElementById('grid');
 const scoreEl = document.getElementById('score');
 const anecdoteBoxEl = document.getElementById('anecdote-box');
 const restartBtnEl = document.getElementById('restart-btn');
 
-// Variables d'état du jeu
 let fleursData = [];
 let cartesRetournees = [];
 let pairesTrouvees = 0;
 let coups = 0;
 let verrouillagePlateau = false;
 
-// 1. Chargement des données depuis data/donnees.json
+// Charge les données des fleurs depuis le fichier JSON local
 async function chargerDonnees() {
     try {
         const reponse = await fetch('data/donnees.json');
@@ -26,11 +24,14 @@ async function chargerDonnees() {
         initialiserJeu();
     } catch (erreur) {
         console.error('Impossible de charger les données :', erreur);
-        gridEl.innerHTML = '<p class="col-span-4 text-red-600 text-sm">Erreur de chargement des cartes.</p>';
+        const msgErreur = document.createElement('p');
+        msgErreur.className = 'col-span-4 text-roussel-rose text-sm font-medium';
+        msgErreur.textContent = 'Erreur de chargement des cartes.';
+        gridEl.replaceChildren(msgErreur);
     }
 }
 
-// 2. Mélange de Fisher-Yates
+// Mélange un tableau de façon aléatoire selon l'algorithme de Fisher-Yates
 function melanger(tableau) {
     const copie = [...tableau];
     for (let i = copie.length - 1; i > 0; i--) {
@@ -40,7 +41,7 @@ function melanger(tableau) {
     return copie;
 }
 
-// 3. Initialisation / Réinitialisation de la partie
+// Prépare la grille de 16 cartes et réinitialise les compteurs de la partie
 function initialiserJeu() {
     cartesRetournees = [];
     pairesTrouvees = 0;
@@ -49,11 +50,10 @@ function initialiserJeu() {
 
     scoreEl.textContent = coups;
     anecdoteBoxEl.classList.add('hidden');
-    anecdoteBoxEl.textContent = '';
+    anecdoteBoxEl.replaceChildren();
     restartBtnEl.classList.add('hidden');
-    gridEl.innerHTML = '';
+    gridEl.replaceChildren();
 
-    // Création des 8 paires (16 cartes) et mélange
     const deck = melanger([...fleursData, ...fleursData]);
 
     deck.forEach((fleur, index) => {
@@ -64,41 +64,69 @@ function initialiserJeu() {
         boutonCarte.dataset.anecdote = fleur.anecdote || '';
         boutonCarte.dataset.index = index + 1;
 
-        // Accessibilité clavier & lecteurs d'écran
         boutonCarte.setAttribute('aria-label', `Carte ${index + 1}, face cachée`);
         boutonCarte.setAttribute('aria-pressed', 'false');
 
-        // Styles Tailwind (Mobile-first 375px + focus clavier visible)
         boutonCarte.className =
-            'aspect-square w-full rounded-lg bg-emerald-600 hover:bg-emerald-700 ' +
-            'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 ' +
-            'text-white font-semibold text-xs sm:text-sm flex items-center justify-center ' +
-            'p-1 shadow transition duration-200 cursor-pointer select-none';
+            'aspect-square w-full rounded-lg bg-roussel-vert hover:opacity-90 ' +
+            'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-roussel-rose ' +
+            'text-white font-bold text-sm flex flex-col items-center justify-center ' +
+            'p-1.5 shadow transition duration-200 cursor-pointer select-none';
 
-        boutonCarte.textContent = '?';
+        const dosCarte = document.createElement('span');
+        dosCarte.dataset.role = 'dos';
+        dosCarte.textContent = '?';
 
-        // L'événement click sur un <button> gère nativement la souris, Entrée et Espace
+        const illustration = document.createElement('img');
+        illustration.src = `img/fleurs/${fleur.id}.svg`;
+        illustration.alt = '';
+        illustration.className = 'hidden w-9 h-9 object-contain pointer-events-none';
+
+        const etiquette = document.createElement('span');
+        etiquette.dataset.role = 'nom';
+        etiquette.textContent = fleur.nom;
+        etiquette.className = 'hidden text-[10px] leading-tight font-semibold text-roussel-texte mt-1 truncate max-w-full';
+
+        boutonCarte.append(dosCarte, illustration, etiquette);
         boutonCarte.addEventListener('click', () => retournerCarte(boutonCarte));
 
         gridEl.appendChild(boutonCarte);
     });
 }
 
-// 4. Logique de retournement d'une carte
+// Bascule l'affichage visuel et accessible d'une carte entre face cachée et face visible
+function basculerVisuelCarte(carte, estVisible) {
+    const dosCarte = carte.querySelector('[data-role="dos"]');
+    const illustration = carte.querySelector('img');
+    const etiquette = carte.querySelector('[data-role="nom"]');
+
+    if (estVisible) {
+        dosCarte.classList.add('hidden');
+        illustration.classList.remove('hidden');
+        etiquette.classList.remove('hidden');
+        carte.classList.remove('bg-roussel-vert', 'hover:opacity-90', 'text-white');
+        carte.classList.add('bg-white', 'text-roussel-texte', 'border-2', 'border-roussel-vert');
+    } else {
+        dosCarte.classList.remove('hidden');
+        illustration.classList.add('hidden');
+        etiquette.classList.add('hidden');
+        carte.classList.remove('bg-white', 'text-roussel-texte', 'border-2', 'border-roussel-vert');
+        carte.classList.add('bg-roussel-vert', 'hover:opacity-90', 'text-white');
+    }
+}
+
+// Retourne une carte au clic ou au clavier et déclenche la vérification si deux sont ouvertes
 function retournerCarte(carte) {
     if (verrouillagePlateau) return;
     if (carte.dataset.trouvee === 'true') return;
     if (cartesRetournees.includes(carte)) return;
 
-    // Révéler la carte
     const index = carte.dataset.index;
     const nom = carte.dataset.nom;
 
-    carte.textContent = nom;
+    basculerVisuelCarte(carte, true);
     carte.setAttribute('aria-label', `Carte ${index}, ${nom}`);
     carte.setAttribute('aria-pressed', 'true');
-    carte.classList.remove('bg-emerald-600', 'hover:bg-emerald-700', 'text-white');
-    carte.classList.add('bg-emerald-50', 'text-emerald-900', 'border-2', 'border-emerald-500');
 
     cartesRetournees.push(carte);
 
@@ -109,19 +137,18 @@ function retournerCarte(carte) {
     }
 }
 
-// 5. Vérification de correspondance entre les 2 cartes
+// Compare les deux cartes retournées et valide la paire ou les retourne après une seconde
 function verifierPaire() {
     verrouillagePlateau = true;
     const [carte1, carte2] = cartesRetournees;
 
     if (carte1.dataset.id === carte2.dataset.id) {
-        // Paire trouvée
         [carte1, carte2].forEach((carte) => {
             carte.dataset.trouvee = 'true';
             carte.disabled = true;
             carte.setAttribute('aria-label', `Carte ${carte.dataset.index}, ${carte.dataset.nom}, paire trouvée`);
-            carte.classList.remove('bg-emerald-50', 'border-emerald-500', 'cursor-pointer');
-            carte.classList.add('bg-emerald-200', 'text-emerald-950', 'border-emerald-600', 'opacity-90', 'cursor-default');
+            carte.classList.remove('bg-white', 'border-roussel-vert', 'cursor-pointer');
+            carte.classList.add('bg-roussel-vert-clair', 'border-roussel-rose', 'opacity-90', 'cursor-default');
         });
 
         afficherAnecdote(carte1.dataset.nom, carte1.dataset.anecdote);
@@ -133,14 +160,11 @@ function verifierPaire() {
             terminerPartie();
         }
     } else {
-        // Pas de correspondance : masquer après 1 seconde
         setTimeout(() => {
             [carte1, carte2].forEach((carte) => {
-                carte.textContent = '?';
+                basculerVisuelCarte(carte, false);
                 carte.setAttribute('aria-label', `Carte ${carte.dataset.index}, face cachée`);
                 carte.setAttribute('aria-pressed', 'false');
-                carte.classList.remove('bg-emerald-50', 'text-emerald-900', 'border-2', 'border-emerald-500');
-                carte.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'text-white');
             });
 
             cartesRetournees = [];
@@ -149,26 +173,36 @@ function verifierPaire() {
     }
 }
 
-// 6. Affichage de l'anecdote botanique
+// Affiche l'anecdote botanique de la paire trouvée en utilisant uniquement textContent
 function afficherAnecdote(nom, anecdote) {
     anecdoteBoxEl.classList.remove('hidden');
-    if (anecdote) {
-        anecdoteBoxEl.innerHTML = `<strong>${nom} :</strong> ${anecdote}`;
-    } else {
-        anecdoteBoxEl.innerHTML = `<strong>${nom} :</strong> Paire trouvée !`;
-    }
+
+    const titreFleur = document.createElement('strong');
+    titreFleur.className = 'text-roussel-vert';
+    titreFleur.textContent = `${nom} : `;
+
+    const texteAnecdote = document.createTextNode(anecdote || 'Paire trouvée !');
+
+    anecdoteBoxEl.replaceChildren(titreFleur, texteAnecdote);
 }
 
-// 7. Fin de partie
+// Affiche le message de victoire final et place le focus sur le bouton Rejouer
 function terminerPartie() {
     anecdoteBoxEl.classList.remove('hidden');
-    anecdoteBoxEl.innerHTML = `<strong>Bravo !</strong> Vous avez retrouvé les ${fleursData.length} paires en <strong>${coups} coups</strong>.`;
+
+    const bravo = document.createElement('strong');
+    bravo.className = 'text-roussel-rose';
+    bravo.textContent = 'Bravo ! ';
+
+    const message = document.createTextNode(
+        `Vous avez retrouvé les ${fleursData.length} paires en ${coups} coups.`
+    );
+
+    anecdoteBoxEl.replaceChildren(bravo, message);
     restartBtnEl.classList.remove('hidden');
     restartBtnEl.focus();
 }
 
-// Écouteur sur le bouton Rejouer
 restartBtnEl.addEventListener('click', initialiserJeu);
 
-// Lancement au chargement
 chargerDonnees();
